@@ -7,6 +7,9 @@ public class Departamento implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String nome;
+	
+	public Departamento () {}
+	
 	public Departamento(int id, String nome) {
 		super();
 		this.id = id;
