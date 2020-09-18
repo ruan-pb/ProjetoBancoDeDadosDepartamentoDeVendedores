@@ -92,8 +92,41 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public List<Vendedor> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT seller.*,department.Name as DepName "+
+					 "FROM seller INNER JOIN department"+
+					" ON seller.DepartmentId = department.Id"+
+					" ORDER BY Name");
+			
+			rs = st.executeQuery();
+			List<Vendedor> lista = new ArrayList<>();
+			Map<Integer,Departamento> map = new HashMap<Integer, Departamento>();
+			while(rs.next()) {
+				
+				Departamento dep = map.get(rs.getInt("DepartmentId"));
+				
+				if(dep == null) {
+					dep = instanciacaoDepartamento(rs);
+					map.put(rs.getInt("DepartmentId"), dep);
+				}
+				
+				Vendedor vd = instanciacaoVendedor(rs, dep);
+				
+				lista.add(vd);
+				
+				
+			}
+			return lista;
+		}
+		catch(SQLException e) {
+			throw new DbIntegridadeException(e.getMessage());
+		}
+		finally {
+			DB.fecharResultSet(rs);
+			DB.fecharStatement(st);
+		}
 	}
 
 	@Override
@@ -110,7 +143,7 @@ public class VendedorDaoJDBC implements VendedorDao {
 			st.setInt(1, departamento.getId());
 			rs = st.executeQuery();
 			List<Vendedor> lista = new ArrayList<>();
-			Map<Integer,Departamento>map = new HashMap<Integer, Departamento>();
+			Map<Integer,Departamento> map = new HashMap<Integer, Departamento>();
 			while(rs.next()) {
 				
 				Departamento dep = map.get(rs.getInt("DepartmentId"));
