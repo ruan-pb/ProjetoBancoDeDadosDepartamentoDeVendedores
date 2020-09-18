@@ -98,9 +98,13 @@ public class VendedorDaoJDBC implements VendedorDao {
 		try {
 			ps = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
 			ps.setInt(1, id);
+			ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			throw new DbIntegridadeException(e.getMessage());
+		}
+		finally {
+			DB.fecharStatement(ps);
 		}
 		
 	}
