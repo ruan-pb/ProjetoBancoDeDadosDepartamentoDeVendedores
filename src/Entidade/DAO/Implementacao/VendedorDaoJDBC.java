@@ -1,7 +1,6 @@
 package Entidade.DAO.Implementacao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -94,7 +93,15 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void deleteId(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+		
+		try {
+			ps = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			ps.setInt(1, id);
+		}
+		catch(SQLException e) {
+			throw new DbIntegridadeException(e.getMessage());
+		}
 		
 	}
 
